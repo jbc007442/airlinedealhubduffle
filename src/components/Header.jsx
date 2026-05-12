@@ -18,7 +18,7 @@ const Header = () => {
     <>
       {/* ================= TOP HEADER ================= */}
       <div className="hidden md:block bg-[#003B5C] text-white border-b border-white/10 overflow-hidden">
-        <div className="max-w-7xl mx-auto relative overflow-hidden h-11 flex items-center">
+        <div className="max-w-7xl mx-auto relative overflow-hidden h-6 flex items-center">
           {/* Marquee Track */}
           <div className="flex items-center whitespace-nowrap animate-marquee gap-16 absolute">
             <div className="flex items-center gap-2 text-sm font-medium tracking-wide">
@@ -52,12 +52,19 @@ const Header = () => {
       </div>
 
       {/* ================= MAIN HEADER ================= */}
-      <header className="bg-white shadow-md sticky top-0 z-50">
+      <header className="bg-gray-200 shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-24">
             {/* ================= LOGO ================= */}
             <div className="flex-shrink-0">
               <Link to="/" className="flex items-center gap-3 group">
+                {/* Logo */}
+                <img
+                  src={logo}
+                  alt="Airline Deal Hub Logo"
+                  className="h-14 w-auto object-contain"
+                />
+
                 {/* Text */}
                 <div className="hidden sm:block leading-tight">
                   <h1 className="text-2xl font-extrabold tracking-tight text-black font-[Poppins]">
@@ -75,7 +82,7 @@ const Header = () => {
 
             {/* ================= DESKTOP MENU ================= */}
             {!hideNav && (
-              <nav className="hidden lg:flex items-center gap-10 flex-1 justify-center">
+              <nav className="hidden lg:flex items-center gap-10 flex-1 justify-end pr-20">
                 <Link
                   to="/"
                   className={`relative text-[17px] font-semibold transition duration-300 hover:text-[#005B8F] ${

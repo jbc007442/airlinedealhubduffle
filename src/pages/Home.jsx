@@ -72,6 +72,8 @@ const Home = () => {
           backgroundImage: `url(${aero})`,
         }}
       >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/40"></div>
         <div className="px-4 md:px-8 lg:px-16 w-full">
           <Searchbar />
         </div>
