@@ -54,7 +54,7 @@ const Header = () => {
       {/* ================= MAIN HEADER ================= */}
       <header className="bg-gray-200 shadow-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-24">
+          <div className="flex items-center justify-between h-20">
             {/* ================= LOGO ================= */}
             <div className="flex-shrink-0">
               <Link to="/" className="flex items-center gap-3 group">
@@ -128,8 +128,8 @@ const Header = () => {
                 {/* Ping Effect */}
                 <span className="absolute inset-0 rounded-full bg-[#005B8F] animate-ping opacity-20"></span>
 
-                <div className="relative flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-[#005B8F] to-[#0A74B8] text-white shadow-xl">
-                  <PhoneCall size={20} />
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#005B8F] to-[#0A74B8] text-white shadow-xl">
+                  <PhoneCall size={16} />
                 </div>
               </div>
 
