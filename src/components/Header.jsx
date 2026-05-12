@@ -73,7 +73,7 @@ const Header = () => {
                     Hub
                   </h1>
 
-                  <p className="text-xs text-gray-500 font-medium tracking-widest uppercase">
+                  <p className="text-[9px] text-gray-500 font-medium tracking-widest uppercase">
                     Best Flight Deals Worldwide
                   </p>
                 </div>
@@ -141,7 +141,7 @@ const Header = () => {
 
                 <a
                   href="tel:+18885016590"
-                  className="text-2xl font-extrabold text-black hover:text-[#005B8F] transition"
+                  className="text-xl font-extrabold text-black hover:text-[#005B8F] transition"
                 >
                   (888) 501-6590
                 </a>
