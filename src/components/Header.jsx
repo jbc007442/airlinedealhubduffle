@@ -33,7 +33,7 @@ const Header = () => {
             </div>
 
             <div className="flex items-center gap-2 text-sm font-medium">
-              <span className="text-yellow-300">🔥 Limited Time Offfers</span>
+              <span className="text-yellow-300">🔥 Limited Time Offers</span>
             </div>
 
             {/* Duplicate */}
@@ -136,7 +136,7 @@ const Header = () => {
               {/* Text */}
               <div className="leading-tight">
                 <p className="text-xs uppercase tracking-[3px] text-gray-500 font-semibold">
-                  24/7 Support
+                  24/7 Supportes
                 </p>
 
                 <a
