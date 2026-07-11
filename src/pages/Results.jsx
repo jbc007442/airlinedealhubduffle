@@ -106,7 +106,10 @@ const AirlineFareBar = ({ flights }) => {
                   src={logoUrl}
                   alt={a.airline}
                   className="h-8 w-8 object-contain mb-1"
-                  onError={(e) => (e.target.style.display = 'none')}
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = `https://pics.avs.io/200/200/${a.code?.toUpperCase()}.png`;
+                  }}
                 />
                 <div className="text-sm font-medium text-gray-800 text-center">{a.airline}</div>
               </div>
@@ -411,6 +414,17 @@ const FlightCard = ({ f, departFlight, returnFlight }) => {
     });
   };
 
+  // ✅ Helper to format time from ISO string to "h:mm AM/PM"
+  const formatTime = (dateString) => {
+    if (!dateString) return '';
+
+    return new Date(dateString).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
+
   // Placeholder function for fare breakdown data
   // In a real app, this would fetch or derive from flight/returnFlight data
   const getFareBreakdown = () => {
@@ -458,18 +472,15 @@ const FlightCard = ({ f, departFlight, returnFlight }) => {
           {/* ✈️ Departure Segment */}
           <div className="flex flex-col md:flex-row justify-between items-start p-6 gap-4">
             <div className="flex items-start gap-4">
-              {!logoError ? (
-                <img
-                  src={getLogoUrl(flight.airlineCode)}
-                  alt={flight.airlineName}
-                  className="w-12 h-12 object-contain rounded-full bg-white border"
-                  onError={() => setLogoError(true)}
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold uppercase">
-                  {(flight.airlineName || flight.airlineCode || 'FL').slice(0, 2)}
-                </div>
-              )}
+              <img
+                src={getLogoUrl(flight.airlineCode)}
+                alt={flight.airlineName}
+                className="w-12 h-12 object-contain rounded-full bg-white border"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = `https://pics.avs.io/200/200/${flight.airlineCode?.toUpperCase()}.png`;
+                }}
+              />
 
               <div>
                 <h3 className="font-semibold text-gray-900 text-base">
@@ -480,14 +491,15 @@ const FlightCard = ({ f, departFlight, returnFlight }) => {
                   Flight {flight.code} • {form.depart || '---'}
                 </p>
                 <p className="text-sm text-gray-600">
-                  {flight.stops === 0 ? 'Nonstop' : `${flight.stops} Stop`} • {flight.duration}
+                  {flight.stops === 0 ? 'Nonstop' : `${flight.stops} Stop`} •{' '}
+                  {fmtDuration(flight.duration)}
                 </p>
               </div>
             </div>
 
             <div className="text-right text-gray-800">
               <p className="text-sm font-semibold">
-                {flight.departTime} - {flight.arriveTime}
+                {formatTime(flight.departTime)} - {formatTime(flight.arriveTime)}
               </p>
               <p className="text-xs text-gray-500">{form.travelClass}</p>
             </div>
@@ -497,18 +509,15 @@ const FlightCard = ({ f, departFlight, returnFlight }) => {
           {form.tripType === 'round' && returnFlight && (
             <div className="flex flex-col md:flex-row justify-between items-start p-6 gap-4 bg-gray-50">
               <div className="flex items-start gap-4">
-                {!returnLogoError ? (
-                  <img
-                    src={getLogoUrl(returnFlight.airlineCode)}
-                    alt={returnFlight.airlineName}
-                    className="w-12 h-12 object-contain rounded-full bg-white border"
-                    onError={() => setReturnLogoError(true)}
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold uppercase">
-                    {(returnFlight.airlineName || returnFlight.airlineCode || 'FL').slice(0, 2)}
-                  </div>
-                )}
+                <img
+                  src={getLogoUrl(returnFlight.airlineCode)}
+                  alt={returnFlight.airlineName}
+                  className="w-12 h-12 object-contain rounded-full bg-white border"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = `https://pics.avs.io/200/200/${returnFlight.airlineCode?.toUpperCase()}.png`;
+                  }}
+                />
 
                 <div>
                   <h3 className="font-semibold text-gray-900 text-base">
@@ -520,14 +529,14 @@ const FlightCard = ({ f, departFlight, returnFlight }) => {
                   </p>
                   <p className="text-sm text-gray-600">
                     {returnFlight.stops === 0 ? 'Nonstop' : `${returnFlight.stops} Stop`} •{' '}
-                    {returnFlight.duration}
+                    {fmtDuration(returnFlight.duration)}
                   </p>
                 </div>
               </div>
 
               <div className="text-right text-gray-800">
                 <p className="text-sm font-semibold">
-                  {returnFlight.departTime} - {returnFlight.arriveTime}
+                  {formatTime(returnFlight.departTime)} - {formatTime(returnFlight.arriveTime)}
                 </p>
                 <p className="text-xs text-gray-500">{form.travelClass}</p>
               </div>
@@ -710,7 +719,7 @@ const FlightCard = ({ f, departFlight, returnFlight }) => {
       )}
     </>
   );
-};
+};;
 
 // -----------------------------
 // Flight Detail Drawer Component
@@ -718,7 +727,7 @@ const FlightCard = ({ f, departFlight, returnFlight }) => {
 
 const FlightDetailDrawer = ({ title, data, form, getLogoUrl }) => {
   const segments = data?.segments && data.segments.length ? data.segments : [data];
-  const totalTrip = data.totalTrip || data.duration || '—';
+  const totalTrip = fmtDuration(data.totalTrip || data.duration) || '—';
 
   // 🔹 Compute layover duration
   const computeLayover = (prev, next) => {
@@ -731,6 +740,17 @@ const FlightDetailDrawer = ({ title, data, form, getLogoUrl }) => {
     return `${h ? `${h}h ` : ''}${m}m`;
   };
   console.log('Flight segments debug:', data.segments);
+
+  // ✅ Helper to format time from ISO string to "h:mm AM/PM"
+  const formatTime = (dateString) => {
+    if (!dateString) return '';
+
+    return new Date(dateString).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
+  };
 
   return (
     <div className="rounded-xl border border-gray-200 shadow-sm p-5 bg-white">
@@ -745,6 +765,10 @@ const FlightDetailDrawer = ({ title, data, form, getLogoUrl }) => {
                 src={getLogoUrl(seg.airlineCode)}
                 alt={seg.airlineName}
                 className="w-8 h-8 object-contain"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = `https://pics.avs.io/200/200/${seg.airlineCode?.toUpperCase()}.png`;
+                }}
               />
               <div>
                 <p className="font-semibold text-gray-800">{seg.airlineName}</p>
@@ -759,10 +783,12 @@ const FlightDetailDrawer = ({ title, data, form, getLogoUrl }) => {
           {/* Timeline */}
           <div className="flex justify-between items-start text-sm text-gray-700">
             <div>
-              <p className="font-semibold">{seg.departTime}</p>
+              <p className="font-semibold">{formatTime(seg.departTime)}</p>
+
               <p className="text-gray-500">
                 ({seg.from}) {seg.fromFull || 'Departure Airport'}
               </p>
+
               {seg.departTerminal && (
                 <p className="text-xs text-gray-400">Terminal: {seg.departTerminal}</p>
               )}
@@ -771,9 +797,10 @@ const FlightDetailDrawer = ({ title, data, form, getLogoUrl }) => {
             <div className="flex-1 text-center">
               <div className="w-full border-t border-dashed border-gray-300 my-3 relative">
                 <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-white px-2 text-xs text-gray-400">
-                  {seg.duration}
+                  {fmtDuration(seg.duration)}
                 </div>
               </div>
+
               <p className="text-xs text-gray-400">
                 {segments.length === 1
                   ? 'Nonstop'
@@ -782,10 +809,12 @@ const FlightDetailDrawer = ({ title, data, form, getLogoUrl }) => {
             </div>
 
             <div className="text-right">
-              <p className="font-semibold">{seg.arriveTime}</p>
+              <p className="font-semibold">{formatTime(seg.arriveTime)}</p>
+
               <p className="text-gray-500">
                 ({seg.to}) {seg.toFull || 'Arrival Airport'}
               </p>
+
               {seg.arriveTerminal && (
                 <p className="text-xs text-gray-400">Terminal: {seg.arriveTerminal}</p>
               )}
@@ -833,7 +862,7 @@ const FlightDetailDrawer = ({ title, data, form, getLogoUrl }) => {
       </div>
     </div>
   );
-};
+};;
 
 // -----------------------------
 // Main Results Page
@@ -986,14 +1015,23 @@ const Results = () => {
     });
   }, [flights, stops, airlines, priceCap]);
 
-  // ✅ Combine each departure flight with a return flight (by index)
+
   const pairedFlights = useMemo(() => {
-    if (form.tripType !== 'round') return filteredFlights.map((f) => ({ flight: f }));
-    return filteredFlights.map((f, i) => ({
+    // One way
+    if (form.tripType !== 'round') {
+      return filteredFlights.map((f) => ({
+        flight: f,
+      }));
+    }
+
+    // Round trip
+    return filteredFlights.slice(0, 20).map((f, i) => ({
       flight: f,
-      returnFlight: returnFlights[i % returnFlights.length] || null,
+      returnFlight: returnFlights[i] || null,
     }));
   }, [filteredFlights, returnFlights, form.tripType]);
+
+
 
   return (
     <div className=" bg-gray-50 text-gray-200">
@@ -1188,8 +1226,38 @@ const Results = () => {
                       />
                     ))
                   ) : (
-                    <div className="bg-white border border-gray-200 rounded-xl p-8 text-center text-gray-600">
-                      No flights match your filters. Try adjusting them.
+                    <div className="space-y-4">
+                      {[...Array(4)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="bg-white border border-gray-200 rounded-xl p-5 animate-pulse"
+                        >
+                          <div className="flex items-center justify-between">
+                            {/* Left */}
+                            <div className="flex items-center gap-4">
+                              <div className="h-10 w-10 bg-gray-200 rounded-full"></div>
+
+                              <div>
+                                <div className="h-4 w-28 bg-gray-200 rounded mb-2"></div>
+                                <div className="h-3 w-20 bg-gray-200 rounded"></div>
+                              </div>
+                            </div>
+
+                            {/* Middle */}
+                            <div className="flex-1 mx-8 flex items-center justify-between">
+                              <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                              <div className="h-4 w-20 bg-gray-200 rounded"></div>
+                              <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                            </div>
+
+                            {/* Right */}
+                            <div className="flex flex-col items-end gap-2">
+                              <div className="h-5 w-16 bg-gray-200 rounded"></div>
+                              <div className="h-8 w-24 bg-gray-300 rounded"></div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>

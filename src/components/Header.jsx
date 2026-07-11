@@ -22,7 +22,7 @@ const Header = () => {
           {/* Marquee Track */}
           <div className="flex items-center whitespace-nowrap animate-marquee gap-16 absolute">
             <div className="flex items-center gap-2 text-sm font-medium tracking-wide">
-              <span className="text-yellow-300 font-bold text-base">✈ 65% OFF</span>
+              <span className="text-yellow-300 font-bold text-base">✈ Upto 20% OFF</span>
 
               <span>Get Amazing Deals on Flights & Travel Packages</span>
             </div>
@@ -38,7 +38,7 @@ const Header = () => {
 
             {/* Duplicate */}
             <div className="flex items-center gap-2 text-sm font-medium tracking-wide">
-              <span className="text-yellow-300 font-bold text-base">✈ 65% OFF</span>
+              <span className="text-yellow-300 font-bold text-base">✈ Upto 20% OFF</span>
 
               <span>Get Amazing Deals on Flights & Travel Packages</span>
             </div>
