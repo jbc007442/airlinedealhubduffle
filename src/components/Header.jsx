@@ -33,7 +33,7 @@ const Header = () => {
             </div>
 
             <div className="flex items-center gap-2 text-sm font-medium">
-              <span className="text-yellow-300">🔥 Limited Time Offer</span>
+              <span className="text-yellow-300">🔥 Limited Time Offfers</span>
             </div>
 
             {/* Duplicate */}
